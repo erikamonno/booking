@@ -1,5 +1,6 @@
 package com.example.booking.filters;
 
+import java.util.UUID;
 import lombok.Data;
 
 @Data
@@ -8,6 +9,6 @@ public class RoomFilter {
     private Integer bedsNumber;
     private Integer floorNumber;
     private Double price;
-    private Long idRoomType;
-    private Long idHotel;
+    private UUID idRoomType;
+    private UUID idHotel;
 }

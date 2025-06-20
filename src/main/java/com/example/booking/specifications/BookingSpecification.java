@@ -1,14 +1,10 @@
 package com.example.booking.specifications;
 
-import com.example.booking.dto.BookingDto;
 import com.example.booking.entities.Booking;
 import com.example.booking.filters.BookingFilter;
 import jakarta.persistence.criteria.*;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 
 @Data
 public class BookingSpecification implements Specification<Booking> {
@@ -18,19 +14,19 @@ public class BookingSpecification implements Specification<Booking> {
     @Override
     public Predicate toPredicate(Root<Booking> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         return Specification.allOf(
-                bookingDateEqual(),
-                dateCheckInBetween(),
-                dateCheckOutBetween(),
-                idRoomEqual(),
-                idCustomerEqual()
-        ).toPredicate(root, query, criteriaBuilder);
+                        bookingDateEqual(),
+                        dateCheckInBetween(),
+                        dateCheckOutBetween(),
+                        idRoomEqual(),
+                        idCustomerEqual())
+                .toPredicate(root, query, criteriaBuilder);
     }
 
     public Specification<Booking> bookingDateEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(filter.getBookingDate()==null) {
+            if (filter.getBookingDate() == null) {
                 return null;
-            }else{
+            } else {
                 return criteriaBuilder.equal(root.get("bookingDate"), filter.getBookingDate());
             }
         };
@@ -38,29 +34,31 @@ public class BookingSpecification implements Specification<Booking> {
 
     public Specification<Booking> dateCheckInBetween() {
         return (root, query, criteriaBuilder) -> {
-            if(filter.getDateCheckIn()==null || filter.getDateCheckOut()==null) {
+            if (filter.getDateCheckIn() == null || filter.getDateCheckOut() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.between(root.get("dateCheckIn"), filter.getDateCheckIn(), filter.getDateCheckOut());
+            } else {
+                return criteriaBuilder.between(
+                        root.get("dateCheckIn"), filter.getDateCheckIn(), filter.getDateCheckOut());
             }
         };
     }
 
     public Specification<Booking> dateCheckOutBetween() {
         return (root, query, criteriaBuilder) -> {
-            if(filter.getDateCheckOut()==null || filter.getDateCheckIn()==null) {
+            if (filter.getDateCheckOut() == null || filter.getDateCheckIn() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.between(root.get("dateCheckOut"), filter.getDateCheckIn(), filter.getDateCheckOut());
+            } else {
+                return criteriaBuilder.between(
+                        root.get("dateCheckOut"), filter.getDateCheckIn(), filter.getDateCheckOut());
             }
         };
     }
 
     public Specification<Booking> idRoomEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(filter.getIdRoom()==null) {
+            if (filter.getIdRoom() == null) {
                 return null;
-            }else{
+            } else {
                 return criteriaBuilder.equal(root.get("room").get("id"), filter.getIdRoom());
             }
         };
@@ -68,9 +66,9 @@ public class BookingSpecification implements Specification<Booking> {
 
     public Specification<Booking> idCustomerEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(filter.getIdCustomer()==null) {
+            if (filter.getIdCustomer() == null) {
                 return null;
-            }else{
+            } else {
                 return criteriaBuilder.equal(root.get("customer").get("id"), filter.getIdCustomer());
             }
         };

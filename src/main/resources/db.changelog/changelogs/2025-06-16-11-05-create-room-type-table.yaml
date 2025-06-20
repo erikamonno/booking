@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: Erika Monno
+      changes:
+        - createTable:
+            tableName: room_type
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: increase_percentage
+                  type: integer
+
+
+

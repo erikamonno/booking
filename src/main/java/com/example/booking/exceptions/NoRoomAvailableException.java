@@ -1,11 +1,10 @@
 package com.example.booking.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatusCode;
 
-@ResponseStatus(HttpStatus.CONFLICT)
-public class NoRoomAvailableException extends RuntimeException {
-    public NoRoomAvailableException(String message) {
-        super(message);
+public class NoRoomAvailableException extends StatusException {
+
+    public NoRoomAvailableException(HttpStatusCode httpStatusCode, String message) {
+        super(httpStatusCode, message);
     }
 }

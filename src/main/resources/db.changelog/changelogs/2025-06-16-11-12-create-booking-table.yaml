@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: Erika Monno
+      changes:
+        - createTable:
+            tableName: booking
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: date_check_in
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_check_out
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: booking_date
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: people_number
+                  type: integer
+              - column:
+                  name: room_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_booking_room_id
+                    referencedTableName: room
+                    referencedColumnNames: id
+              - column:
+                  name: customer_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_booking_customer_id
+                    referencedTableName: customer
+                    referencedColumnNames: id
+

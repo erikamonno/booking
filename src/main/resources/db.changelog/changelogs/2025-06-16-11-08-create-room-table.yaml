@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: Erika Monno
+      changes:
+        - createTable:
+            tableName: room
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: room_number
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: beds_number
+                  type: integer
+              - column:
+                  name: floor_number
+                  type: integer
+              - column:
+                  name: price
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: room_type_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_room_room_type_id
+                    referencedTableName: room_type
+                    referencedColumnNames: id
+              - column:
+                  name: accommodation_facility_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_room_accommodation_facility_id
+                    referencedTableName: accommodation_facility
+                    referencedColumnNames: id
+

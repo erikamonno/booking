@@ -2,17 +2,18 @@ package com.example.booking.servicies;
 
 import com.example.booking.dto.CustomerDto;
 import com.example.booking.entities.Customer;
-import com.example.booking.exceptions.CustomerNotFound;
+import com.example.booking.exceptions.CustomerNotFoundException;
 import com.example.booking.filters.CustomerFilter;
 import com.example.booking.mappers.CustomerMapper;
 import com.example.booking.repositories.CustomerRepository;
-import com.example.booking.servicies.CustomerService;
 import com.example.booking.specifications.CustomerSpecification;
-import lombok.extern.slf4j.Slf4j;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -27,7 +28,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto insertCustomer(CustomerDto dto) {
         Customer entity = new Customer();
-        entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         entity.setEmail(dto.getEmail());
@@ -37,10 +37,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto readOneCustomer(Long id) {
+    public CustomerDto readOneCustomer(UUID id) {
         var oEntity = repository.findById(id);
-        if(oEntity.isEmpty()) {
-            throw new CustomerNotFound("Customer not found");
+        if (oEntity.isEmpty()) {
+            throw new CustomerNotFoundException(HttpStatus.NOT_FOUND, "Customer not found");
         }
         var entity = oEntity.get();
         return mapper.toDto(entity);
@@ -53,10 +53,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public void updateCustomer(Long id, CustomerDto dto) {
+    public void updateCustomer(UUID id, CustomerDto dto) {
         var oEntity = repository.findById(id);
-        if(oEntity.isEmpty()) {
-            throw new CustomerNotFound("Customer not found");
+        if (oEntity.isEmpty()) {
+            throw new CustomerNotFoundException(HttpStatus.NOT_FOUND, "Customer not found");
         }
         var entity = oEntity.get();
         entity.setName(dto.getName());
@@ -66,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void delteCustomer(Long id) {
+    public void deleteCustomer(UUID id) {
         repository.deleteById(id);
     }
 }

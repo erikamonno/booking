@@ -1,6 +1,7 @@
 package com.example.booking.entities;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.Data;
 
 @Data
@@ -11,7 +12,7 @@ public class RoomType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "name")
     private String name;

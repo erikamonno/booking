@@ -8,6 +8,4 @@ import org.mapstruct.Mapper;
 public interface RoomTypeMapper {
 
     RoomTypeDto toDto(RoomType entity);
-    RoomType toEntity(RoomTypeDto dto);
-
 }

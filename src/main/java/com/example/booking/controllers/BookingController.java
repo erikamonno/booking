@@ -4,6 +4,7 @@ import com.example.booking.dto.BookingDto;
 import com.example.booking.filters.BookingFilter;
 import com.example.booking.servicies.BookingService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,7 +26,7 @@ public class BookingController {
     }
 
     @GetMapping("{id}")
-    public BookingDto readOneBooking(@PathVariable Long id) {
+    public BookingDto readOneBooking(@PathVariable(name = "id") UUID id) {
         return service.readOneBooking(id);
     }
 
@@ -35,12 +36,12 @@ public class BookingController {
     }
 
     @PutMapping("{id}")
-    public void updateBooking(@PathVariable Long id, @RequestBody @Valid BookingDto dto) {
+    public void updateBooking(@PathVariable(name = "id") UUID id, @RequestBody @Valid BookingDto dto) {
         service.updateBooking(id, dto);
     }
 
     @DeleteMapping("{id}")
-    public void deleteBooking(@PathVariable(name = "id") Long id) {
+    public void deleteBooking(@PathVariable(name = "id") UUID id) {
         service.deleteBooking(id);
     }
 }

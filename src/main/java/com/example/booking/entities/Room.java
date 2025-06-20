@@ -1,6 +1,7 @@
 package com.example.booking.entities;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.Data;
 
 @Entity
@@ -11,7 +12,7 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "room_number")
     private Integer roomNumber;
@@ -31,5 +32,5 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "id_hotel")
-    private Hotel hotel;
+    private AccommodationFacility accommodationFacility;
 }

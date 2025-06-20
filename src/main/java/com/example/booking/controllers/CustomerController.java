@@ -4,6 +4,7 @@ import com.example.booking.dto.CustomerDto;
 import com.example.booking.filters.CustomerFilter;
 import com.example.booking.servicies.CustomerService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,22 +26,23 @@ public class CustomerController {
     }
 
     @GetMapping("{id}")
-    public CustomerDto readOneCustomer(@PathVariable Long id) {
+    public CustomerDto readOneCustomer(@PathVariable(name = "id") UUID id) {
         return service.readOneCustomer(id);
     }
 
     @GetMapping
-    public Page<CustomerDto> searchCustomer(@PageableDefault(sort = "id") Pageable pageable, @Valid CustomerFilter filter) {
+    public Page<CustomerDto> searchCustomer(
+            @PageableDefault(sort = "id") Pageable pageable, @Valid CustomerFilter filter) {
         return service.searchCustomer(pageable, filter);
     }
 
     @PutMapping("{id}")
-    public void updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerDto dto) {
+    public void updateCustomer(@PathVariable(name = "id") UUID id, @Valid @RequestBody CustomerDto dto) {
         service.updateCustomer(id, dto);
     }
 
     @DeleteMapping("{id}")
-    public void deleteCustomer(@PathVariable Long id) {
-        service.delteCustomer(id);
+    public void deleteCustomer(@PathVariable(name = "id") UUID id) {
+        service.deleteCustomer(id);
     }
 }

@@ -4,6 +4,7 @@ import com.example.booking.dto.RoomTypeDto;
 import com.example.booking.filters.RoomTypeFilter;
 import com.example.booking.servicies.RoomTypeService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,7 +25,7 @@ public class RoomTypeController {
     }
 
     @GetMapping("{id}")
-    public RoomTypeDto readOneType(@PathVariable Long id) {
+    public RoomTypeDto readOneType(@PathVariable(name = "id") UUID id) {
         return service.readOneType(id);
     }
 
@@ -34,12 +35,12 @@ public class RoomTypeController {
     }
 
     @PutMapping("{id}")
-    void updateType(@RequestBody RoomTypeDto dto, @PathVariable Long id) {
+    void updateType(@RequestBody RoomTypeDto dto, @PathVariable(name = "id") UUID id) {
         service.updateType(dto, id);
     }
 
     @DeleteMapping("{id}")
-    void deleteType(@PathVariable Long id) {
+    void deleteType(@PathVariable(name = "id") UUID id) {
         service.deleteType(id);
     }
 }

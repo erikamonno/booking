@@ -3,17 +3,18 @@ package com.example.booking.servicies;
 import com.example.booking.dto.BookingDto;
 import com.example.booking.dto.RoomDto;
 import com.example.booking.entities.Booking;
-import com.example.booking.exceptions.BookingNotFound;
-import com.example.booking.exceptions.InsufficentBedsNumberException;
+import com.example.booking.exceptions.BookingNotFoundException;
+import com.example.booking.exceptions.InsufficientBedsNumberException;
 import com.example.booking.exceptions.NoRoomAvailableException;
 import com.example.booking.filters.BookingFilter;
 import com.example.booking.mappers.BookingMapper;
-import com.example.booking.mappers.CustomerMapper;
-import com.example.booking.mappers.RoomMapper;
+import com.example.booking.mappers.ReferenceMapper;
 import com.example.booking.repositories.BookingRepository;
 import com.example.booking.specifications.BookingSpecification;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,32 +24,34 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository repository;
     private final BookingMapper mapper;
     private final RoomService roomService;
-    private final RoomMapper roomMapper;
     private final CustomerService customerService;
-    private final CustomerMapper customerMapper;
+    private final ReferenceMapper referenceMapper;
 
-    public BookingServiceImpl(BookingRepository repository, BookingMapper mapper, RoomService roomService, RoomMapper roomMapper, CustomerService customerService, CustomerMapper customerMapper) {
+    public BookingServiceImpl(
+            BookingRepository repository,
+            BookingMapper mapper,
+            RoomService roomService,
+            CustomerService customerService,
+            ReferenceMapper referenceMapper) {
         this.repository = repository;
         this.mapper = mapper;
-
         this.roomService = roomService;
-        this.roomMapper = roomMapper;
         this.customerService = customerService;
-        this.customerMapper = customerMapper;
+        this.referenceMapper = referenceMapper;
     }
 
     @Override
     public BookingDto insertBooking(BookingDto dto) {
         Booking entity = new Booking();
-        var room = roomService.readOneRoom(dto.getIdRoom());
-        var customer = customerService.readOneCustomer(dto.getIdCustomer());
+        var room = roomService.readOneRoom(dto.getRoom().getId());
+        var customer = customerService.readOneCustomer(dto.getCustomer().getId());
         checkBedsNumber(dto, room);
         checkIfDateIsAvailable(dto);
         entity.setBookingDate(dto.getBookingDate());
         entity.setDateCheckIn(dto.getDateCheckIn());
         entity.setDateCheckOut(dto.getDateCheckOut());
-        entity.setRoom(roomMapper.toEntity(room));
-        entity.setCustomer(customerMapper.toEntity(customer));
+        entity.setRoom(referenceMapper.toRoom(room.getId()));
+        entity.setCustomer(referenceMapper.toCustomer(customer.getId()));
         entity.setPeopleNumber(dto.getPeopleNumber());
         entity = repository.save(entity);
         return mapper.toDto(entity);
@@ -58,24 +61,24 @@ public class BookingServiceImpl implements BookingService {
         BookingFilter filter = new BookingFilter();
         filter.setDateCheckIn(dto.getDateCheckIn());
         filter.setDateCheckOut(dto.getDateCheckOut());
-        filter.setIdRoom(dto.getIdRoom());
+        filter.setIdRoom(dto.getRoom().getId());
         var bookedRooms = searchBooking(Pageable.ofSize(1), filter);
-        if(!bookedRooms.isEmpty()) {
-            throw new NoRoomAvailableException("No room available");
+        if (!bookedRooms.isEmpty()) {
+            throw new NoRoomAvailableException(HttpStatus.CONFLICT, "No room available");
         }
     }
 
     private void checkBedsNumber(BookingDto bookingDto, RoomDto roomDto) {
-        if(bookingDto.getPeopleNumber()>roomDto.getBedsNumber()) {
-            throw new InsufficentBedsNumberException("Insufficent beds number");
+        if (bookingDto.getPeopleNumber() > roomDto.getBedsNumber()) {
+            throw new InsufficientBedsNumberException(HttpStatus.BAD_REQUEST, "Insufficient beds number");
         }
     }
 
     @Override
-    public BookingDto readOneBooking(Long id) {
+    public BookingDto readOneBooking(UUID id) {
         var oEntity = repository.findById(id);
-        if(oEntity.isEmpty()) {
-            throw new BookingNotFound("Booking not found");
+        if (oEntity.isEmpty()) {
+            throw new BookingNotFoundException(HttpStatus.NOT_FOUND, "Booking not found");
         }
         var entity = oEntity.get();
         return mapper.toDto(entity);
@@ -88,27 +91,30 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public void updateBooking(Long id, BookingDto dto) {
+    public void updateBooking(UUID id, BookingDto dto) {
         var oEntity = repository.findById(id);
-        var room = roomService.readOneRoom(dto.getIdRoom());
-        var customer = customerService.readOneCustomer(dto.getIdCustomer());
-        if(oEntity.isEmpty()) {
-            throw new BookingNotFound("Booking not found");
+        var room = roomService.readOneRoom(dto.getRoom().getId());
+        var customer = customerService.readOneCustomer(dto.getCustomer().getId());
+        if (oEntity.isEmpty()) {
+            throw new BookingNotFoundException(HttpStatus.NOT_FOUND, "Booking not found");
         }
+
         checkBedsNumber(dto, room);
+
         checkIfDateIsAvailable(dto);
+
         var entity = oEntity.get();
         entity.setBookingDate(dto.getBookingDate());
         entity.setDateCheckIn(dto.getDateCheckIn());
         entity.setDateCheckOut(dto.getDateCheckOut());
         entity.setDateCheckOut(dto.getDateCheckOut());
-        entity.setRoom(roomMapper.toEntity(room));
-        entity.setCustomer(customerMapper.toEntity(customer));
+        entity.setRoom(referenceMapper.toRoom(room.getId()));
+        entity.setCustomer(referenceMapper.toCustomer(customer.getId()));
         entity.setPeopleNumber(dto.getPeopleNumber());
     }
 
     @Override
-    public void deleteBooking(Long id) {
+    public void deleteBooking(UUID id) {
         repository.deleteById(id);
     }
 }

@@ -1,9 +1,9 @@
 package com.example.booking.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.time.Instant;
+import java.util.UUID;
+import lombok.Data;
 
 @Entity
 @Data
@@ -13,7 +13,7 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "booking_date")
     private Instant bookingDate;

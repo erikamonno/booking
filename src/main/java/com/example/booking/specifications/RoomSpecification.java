@@ -1,6 +1,5 @@
 package com.example.booking.specifications;
 
-import com.example.booking.dto.RoomDto;
 import com.example.booking.entities.Room;
 import com.example.booking.filters.RoomFilter;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -18,71 +17,71 @@ public class RoomSpecification implements Specification<Room> {
     @Override
     public Predicate toPredicate(Root<Room> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         return Specification.allOf(
-                roomNumberEqual(filter.getRoomNumber()),
-                bedsNumberEqual(filter.getBedsNumber()),
-                floorNumberEqual(filter.getFloorNumber()),
-                priceEqual(filter.getPrice()),
-                idRoomTypeEqual(filter.getIdRoomType()),
-                idHotelEqual(filter.getIdHotel())
-        ).toPredicate(root, query, criteriaBuilder);
+                        roomNumberEqual(),
+                        bedsNumberEqual(),
+                        floorNumberEqual(),
+                        priceEqual(),
+                        idRoomTypeEqual(),
+                        idHotelEqual())
+                .toPredicate(root, query, criteriaBuilder);
     }
 
-    private Specification<Room> roomNumberEqual(Integer roomNumber) {
+    private Specification<Room> roomNumberEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(roomNumber==null) {
+            if (filter.getRoomNumber() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("roomNumber"), roomNumber);
+            } else {
+                return criteriaBuilder.equal(root.get("roomNumber"), filter.getRoomNumber());
             }
         };
     }
 
-    private Specification<Room> bedsNumberEqual(Integer bedsNumber) {
+    private Specification<Room> bedsNumberEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(bedsNumber==null) {
+            if (filter.getRoomNumber() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("bedsNumber"), bedsNumber);
+            } else {
+                return criteriaBuilder.equal(root.get("bedsNumber"), filter.getBedsNumber());
             }
         };
     }
 
-    private Specification<Room> floorNumberEqual(Integer floorNumber) {
+    private Specification<Room> floorNumberEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(floorNumber==null) {
+            if (filter.getFloorNumber() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("floorNUmber"), floorNumber);
+            } else {
+                return criteriaBuilder.equal(root.get("floorNUmber"), filter.getFloorNumber());
             }
         };
     }
 
-    private Specification<Room> priceEqual(Double price) {
+    private Specification<Room> priceEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(price==null) {
+            if (filter.getPrice() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("price"), price);
+            } else {
+                return criteriaBuilder.equal(root.get("price"), filter.getPrice());
             }
         };
     }
 
-    private Specification<Room> idRoomTypeEqual(Long idRoomType) {
+    private Specification<Room> idRoomTypeEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(idRoomType==null) {
+            if (filter.getIdRoomType() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("roomType").get("id"), idRoomType);
+            } else {
+                return criteriaBuilder.equal(root.get("roomType").get("id"), filter.getIdRoomType());
             }
         };
     }
 
-    private Specification<Room> idHotelEqual(Long idHotel) {
+    private Specification<Room> idHotelEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(idHotel==null) {
+            if (filter.getIdHotel() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("hotel").get("id"), idHotel);
+            } else {
+                return criteriaBuilder.equal(root.get("hotel").get("id"), filter.getIdHotel());
             }
         };
     }

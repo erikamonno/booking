@@ -8,62 +8,55 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
+
 @Data
 public class CustomerSpecification implements Specification<Customer> {
-    private CustomerFilter filter;
 
-    public CustomerSpecification(CustomerFilter filter) {
-        this.filter = filter;
-    }
+    private final CustomerFilter filter;
 
     @Override
     public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        return Specification.allOf(
-                nameEqual(filter.getName()),
-                surnameEqual(filter.getSurname()),
-                emailEqual(filter.getEmail()),
-                phoneEqual(filter.getPhone())
-        ).toPredicate(root, query, criteriaBuilder);
+        return Specification.allOf(nameEqual(), surnameEqual(), emailEqual(), phoneEqual())
+                .toPredicate(root, query, criteriaBuilder);
     }
 
-    private static Specification<Customer> nameEqual(String name) {
+    public Specification<Customer> nameEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(name==null) {
+            if (filter.getName() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("name"), name);
+            } else {
+                return criteriaBuilder.equal(root.get("name"), filter.getName());
             }
         };
     }
 
-    private static Specification<Customer> surnameEqual(String surname) {
+    public Specification<Customer> surnameEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(surname==null) {
+            if (filter.getSurname() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("surname"), surname);
+            } else {
+                return criteriaBuilder.equal(root.get("surname"), filter.getSurname());
             }
         };
     }
 
-    private static Specification<Customer> emailEqual(String email) {
+    public Specification<Customer> emailEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(email==null) {
+            if (filter.getEmail() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("email"), email);
+            } else {
+                return criteriaBuilder.equal(root.get("email"), filter.getEmail());
             }
         };
     }
 
-    private static Specification<Customer> phoneEqual(String phone) {
+    public Specification<Customer> phoneEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(phone==null) {
+            if (filter.getPhone() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("phone"), phone);
+            } else {
+                return criteriaBuilder.equal(root.get("phone"), filter.getPhone());
             }
         };
     }
-
 }

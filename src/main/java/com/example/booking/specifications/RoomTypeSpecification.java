@@ -12,36 +12,29 @@ import org.springframework.data.jpa.domain.Specification;
 @Data
 public class RoomTypeSpecification implements Specification<RoomType> {
 
-    private RoomTypeFilter filter;
-
-    public RoomTypeSpecification(RoomTypeFilter filter) {
-        this.filter = filter;
-    }
+    private final RoomTypeFilter filter;
 
     @Override
     public Predicate toPredicate(Root<RoomType> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        return Specification.allOf(
-                nameEqual(filter.getName()),
-                increasePercentageEqual(filter.getIncreasePercentage())
-        ).toPredicate(root, query, criteriaBuilder);
+        return Specification.allOf(nameEqual(), increasePercentageEqual()).toPredicate(root, query, criteriaBuilder);
     }
 
-    private Specification<RoomType> nameEqual(String name) {
+    public Specification<RoomType> nameEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(name==null) {
+            if (filter.getName() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("name"), name);
+            } else {
+                return criteriaBuilder.equal(root.get("name"), filter.getName());
             }
         };
     }
 
-    private Specification<RoomType> increasePercentageEqual(Integer increasePercentage) {
+    public Specification<RoomType> increasePercentageEqual() {
         return (root, query, criteriaBuilder) -> {
-            if(increasePercentage==null) {
+            if (filter.getIncreasePercentage() == null) {
                 return null;
-            }else{
-                return criteriaBuilder.equal(root.get("increasePercentage"), increasePercentage);
+            } else {
+                return criteriaBuilder.equal(root.get("increasePercentage"), filter.getIncreasePercentage());
             }
         };
     }
