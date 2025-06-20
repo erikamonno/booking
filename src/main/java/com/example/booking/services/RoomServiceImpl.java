@@ -1,4 +1,4 @@
-package com.example.booking.servicies;
+package com.example.booking.services;
 
 import com.example.booking.dto.RoomDto;
 import com.example.booking.entities.Room;

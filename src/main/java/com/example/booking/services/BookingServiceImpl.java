@@ -1,4 +1,4 @@
-package com.example.booking.servicies;
+package com.example.booking.services;
 
 import com.example.booking.dto.BookingDto;
 import com.example.booking.dto.RoomDto;
@@ -45,8 +45,11 @@ public class BookingServiceImpl implements BookingService {
         Booking entity = new Booking();
         var room = roomService.readOneRoom(dto.getRoom().getId());
         var customer = customerService.readOneCustomer(dto.getCustomer().getId());
+
         checkBedsNumber(dto, room);
+
         checkIfDateIsAvailable(dto);
+
         entity.setBookingDate(dto.getBookingDate());
         entity.setDateCheckIn(dto.getDateCheckIn());
         entity.setDateCheckOut(dto.getDateCheckOut());

@@ -2,7 +2,7 @@ package com.example.booking.controllers;
 
 import com.example.booking.dto.AccommodationFacilityDto;
 import com.example.booking.filters.AccommodationFacilityFilter;
-import com.example.booking.servicies.AccommodationFacilityService;
+import com.example.booking.services.AccommodationFacilityService;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
